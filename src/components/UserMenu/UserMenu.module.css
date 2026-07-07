@@ -1,0 +1,99 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  padding: var(--dp-space-50);
+  border: none;
+  background: transparent;
+  border-radius: var(--dp-radius-pill, 999px);
+  cursor: pointer;
+  color: var(--dp-color-on-surface);
+}
+
+.trigger:hover {
+  background: var(--dp-color-surface-container-high);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--dp-color-primary);
+  outline-offset: 2px;
+}
+
+.chevron {
+  color: var(--dp-color-on-surface-variant);
+  transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + var(--dp-space-100));
+  right: 0;
+  min-width: 15rem;
+  background: var(--dp-color-surface-container-high);
+  border: 1px solid var(--dp-color-outline-variant);
+  border-radius: 12px;
+  box-shadow: var(--dp-sem-shadow-dropdown);
+  padding: var(--dp-space-100);
+  z-index: 50;
+}
+
+.identity {
+  padding: var(--dp-space-150) var(--dp-space-150) var(--dp-space-100);
+}
+
+.name {
+  font-family: var(--dp-font-family-heading);
+  font-weight: var(--dp-font-weight-semibold);
+  color: var(--dp-color-on-surface);
+}
+
+.email {
+  font-family: var(--dp-font-family-code);
+  font-size: var(--dp-font-size-75, 0.8125rem);
+  color: var(--dp-color-on-surface-variant);
+  margin-top: var(--dp-space-25);
+  word-break: break-all;
+}
+
+.role {
+  margin-top: var(--dp-space-100);
+}
+
+.divider {
+  height: 1px;
+  background: var(--dp-color-outline-variant);
+  margin: var(--dp-space-100) 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  width: 100%;
+  padding: var(--dp-space-62) var(--dp-space-150);
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--dp-color-on-surface);
+  font-family: var(--dp-font-family-body);
+  font-size: var(--dp-font-size-100, 1rem);
+  text-align: left;
+}
+
+.item:hover {
+  background: var(--dp-color-surface-container-highest);
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--dp-color-primary);
+  outline-offset: -2px;
+}

@@ -1,0 +1,80 @@
+/* Reusable page-composition primitives. Layout only — no visual components. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-300);
+}
+
+.sectionTitle {
+  font-family: var(--dp-font-family-heading);
+  font-weight: var(--dp-font-weight-semibold);
+  font-size: var(--dp-font-size-300, 1.25rem);
+  color: var(--dp-color-on-surface);
+  margin: 0 0 var(--dp-space-150);
+}
+
+.eyebrow {
+  font-family: var(--dp-font-family-code);
+  font-size: var(--dp-font-size-50, 0.75rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dp-color-on-surface-variant);
+  margin: 0 0 var(--dp-space-100);
+}
+
+/* KPI row — 4 across on desktop, 2 on tablet, 2 on mobile. */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--dp-space-200);
+}
+
+/* Two equal columns that stack on narrow screens. */
+.twoCol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--dp-space-300);
+}
+
+/* Activity (wide) + breakdown (narrow). */
+.chartSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--dp-space-300);
+}
+
+/* Conditional channel blocks. */
+.channelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--dp-space-300);
+}
+
+/* Card grid for campaigns. */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: var(--dp-space-250);
+}
+
+.metricRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dp-space-300);
+}
+
+@media (max-width: 1024px) {
+  .chartSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}

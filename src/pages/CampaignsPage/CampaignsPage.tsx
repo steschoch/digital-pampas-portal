@@ -1,0 +1,46 @@
+import { EmptyState, Icon, Skeleton } from '@steschoch/digital-pampas-ds'
+import { useScope } from '../../lib/useScope'
+import { PageHeader } from '@steschoch/digital-pampas-ds'
+import { CampaignCard } from '../../components/campaign/CampaignCard'
+import { CampaignDetailView } from '../../components/campaign/CampaignDetailView'
+import layout from '../../styles/layout.module.css'
+
+export function CampaignsPage() {
+  const { client, campaigns, campaignIds, isAll, loading } = useScope()
+
+  // A specific campaign is selected in the global dropdown → show its full dossier
+  // (not the grid). "All campaigns" shows the grid.
+  if (!isAll && campaignIds.length === 1) {
+    return <CampaignDetailView id={campaignIds[0]} />
+  }
+
+  return (
+    <div className={layout.stack}>
+      <PageHeader
+        eyebrow="Campaigns"
+        title="Campaigns"
+        subtitle={client ? `${client.name} · ${campaigns.length} campaign${campaigns.length === 1 ? '' : 's'}` : '—'}
+      />
+
+      {loading ? (
+        <div className={layout.cardGrid}>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} variant="rect" height={230} />
+          ))}
+        </div>
+      ) : campaigns.length === 0 ? (
+        <EmptyState
+          icon={<Icon name="Megaphone" size="xl" />}
+          title="No campaigns yet"
+          description="Campaigns for this client will appear here once they're set up."
+        />
+      ) : (
+        <div className={layout.cardGrid}>
+          {campaigns.map((c) => (
+            <CampaignCard key={c.id} campaign={c} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

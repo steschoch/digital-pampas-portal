@@ -1,0 +1,79 @@
+/* App shell — fixed Sidebar + sticky TopBar + content that scrolls with the
+   BROWSER window (no internal scroll container). The sidebar is position:fixed so
+   it never moves and always spans the full viewport height (rectangular page end).
+   Layout only. */
+
+.shell {
+  /* --sidebar-w is set inline based on collapsed state (240 / 64 / 0 on mobile). */
+  min-height: 100vh;
+}
+
+/* display:contents so the DS <aside> becomes the positioned element directly. */
+.sidebarSlot {
+  display: contents;
+}
+
+.sidebarSlot > aside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 90;
+  /* Sidebar surface tone. grey-subtle is light in light mode / dark in dark mode,
+     so the DS text + theme-reactive Logo keep good contrast in both. */
+  background: var(--dp-color-surface-grey-subtle);
+  overflow-x: hidden;
+}
+
+.main {
+  margin-left: var(--sidebar-w, 240px);
+  min-width: 0;
+  min-height: 100vh;
+}
+
+/* TopBar stays pinned to the top of the viewport while the window scrolls.
+   (The DS TopBar is already position:sticky; top:0 — this just guarantees the
+   stacking + that it's never shrunk.) */
+.main > header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.content {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: var(--dp-space-300) var(--dp-space-300) var(--dp-space-600);
+}
+
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.footerNote {
+  font-family: var(--dp-font-family-code);
+  font-size: var(--dp-font-size-50, 0.75rem);
+  color: var(--dp-color-on-surface-grey-muted, var(--dp-color-on-surface-variant));
+  display: flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  padding-inline: var(--dp-space-50);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Mobile: hide the persistent sidebar; navigation moves to the drawer.
+   The drawer overlay is a <div> (position:fixed), so it still shows. */
+@media (max-width: 640px) {
+  .sidebarSlot > aside {
+    display: none;
+  }
+  .main {
+    margin-left: 0;
+  }
+  .content {
+    padding: var(--dp-space-200) var(--dp-space-150) var(--dp-space-500);
+  }
+}
