@@ -52,6 +52,36 @@
   align-items: center;
 }
 
+/* Mobile-only row for the context selectors, below the TopBar (C-04b). */
+.selectorBar {
+  position: sticky;
+  top: var(--dp-nav-height);
+  z-index: 99;
+  display: flex;
+  gap: var(--dp-space-100);
+  padding: var(--dp-space-100) var(--dp-space-150);
+  background: var(--dp-color-surface);
+  border-bottom: var(--dp-sem-stroke-border) solid var(--dp-color-outline-variant);
+}
+
+.selectorBar > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Visually hidden live region — announced by screen readers only. */
+.srLive {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .footerNote {
   font-family: var(--dp-font-family-code);
   font-size: var(--dp-font-size-50, 0.75rem);

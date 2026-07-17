@@ -1,0 +1,70 @@
+{
+ "desktop": {
+  "badge": {
+   "tag": "SPAN",
+   "cls": "_badge_pyp6d_3 _success_pyp6d_47",
+   "text": "under 2%",
+   "rect": {
+    "x": 500.375,
+    "y": 438.59375,
+    "width": 98.59375,
+    "height": 23.59375,
+    "right": 598.96875,
+    "bottom": 462.1875
+   }
+  },
+  "label": {
+   "tag": "SPAN",
+   "cls": "_label_ar96f_36",
+   "text": "Deliverability",
+   "rect": {
+    "x": 563,
+    "y": 435.09375,
+    "width": 104,
+    "height": 15,
+    "right": 667,
+    "bottom": 450.09375
+   }
+  },
+  "overlap": {
+   "x": 35.96875,
+   "y": 11.5,
+   "overlapping": true
+  },
+  "blockCls": "_channelBody_xgdb8_26"
+ },
+ "mobile": {
+  "badge": {
+   "tag": "SPAN",
+   "cls": "_badge_pyp6d_3 _success_pyp6d_47",
+   "text": "under 2%",
+   "rect": {
+    "x": 277.375,
+    "y": 410.140625,
+    "width": 98.59375,
+    "height": 23.59375,
+    "right": 375.96875,
+    "bottom": 433.734375
+   }
+  },
+  "label": {
+   "tag": "SPAN",
+   "cls": "_label_ar96f_36",
+   "text": "Deliverability",
+   "rect": {
+    "x": 79,
+    "y": 589.640625,
+    "width": 104,
+    "height": 15,
+    "right": 183,
+    "bottom": 604.640625
+   }
+  },
+  "overlap": {
+   "x": 0,
+   "y": 0,
+   "overlapping": false
+  },
+  "blockCls": "_channelBody_xgdb8_26"
+ }
+}

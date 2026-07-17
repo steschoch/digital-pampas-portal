@@ -2,17 +2,12 @@ import { EmptyState, Icon, Skeleton } from '@steschoch/digital-pampas-ds'
 import { useScope } from '../../lib/useScope'
 import { PageHeader } from '@steschoch/digital-pampas-ds'
 import { CampaignCard } from '../../components/campaign/CampaignCard'
-import { CampaignDetailView } from '../../components/campaign/CampaignDetailView'
 import layout from '../../styles/layout.module.css'
 
 export function CampaignsPage() {
-  const { client, campaigns, campaignIds, isAll, loading } = useScope()
-
-  // A specific campaign is selected in the global dropdown → show its full dossier
-  // (not the grid). "All campaigns" shows the grid.
-  if (!isAll && campaignIds.length === 1) {
-    return <CampaignDetailView id={campaignIds[0]} />
-  }
+  // /campaigns always shows the full grid; a single campaign's dossier lives at
+  // /campaigns/:id. The global dropdown filters the dashboard pages, not this list. (C-19)
+  const { client, campaigns, loading } = useScope()
 
   return (
     <div className={layout.stack}>

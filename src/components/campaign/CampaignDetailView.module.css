@@ -22,3 +22,11 @@
   gap: var(--dp-space-150);
   flex-wrap: wrap;
 }
+
+.syncAside {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

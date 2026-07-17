@@ -29,6 +29,7 @@ export function CampaignSelector() {
       value={campaignId}
       onChange={setCampaign}
       size="sm"
+      label="Campaign"
       aria-label="Select campaign"
     />
   )

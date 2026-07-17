@@ -6,6 +6,7 @@ import { useScope } from '../../lib/useScope'
 import { formatCompact, formatCurrencyCompact, formatLongDate } from '../../lib/format'
 import { PageHeader } from '@steschoch/digital-pampas-ds'
 import type { ReportSummary } from '../../data/types'
+import { ScopeFilterChip } from '../../components/ScopeFilterChip/ScopeFilterChip'
 import layout from '../../styles/layout.module.css'
 
 /** Mock export — builds a small CSV client-side and triggers a download. */
@@ -94,7 +95,7 @@ export function ReportsPage() {
             size="sm"
             onClick={() => exportReportCsv(r, campaignName(r.campaignId))}
           >
-            <Icon name="Download" size="xs" /> {r.format.toUpperCase()}
+            <Icon name="Download" size="xs" /> CSV
           </Button>
         )
       },
@@ -109,6 +110,7 @@ export function ReportsPage() {
         subtitle={client ? `${client.name} · monthly & weekly snapshots` : '—'}
         aside={<Badge variant="neutral">Export is a demo</Badge>}
       />
+      <ScopeFilterChip />
       <DataTable
         columns={columns}
         rows={(reports ?? []) as unknown as DataRow[]}

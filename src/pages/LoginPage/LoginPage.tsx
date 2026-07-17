@@ -118,7 +118,11 @@ export function LoginPage() {
                 <span>
                   {c.email} · {c.password}
                 </span>
-                <button type="button" onClick={() => fillDemo(c.email, c.password)}>
+                <button
+                  type="button"
+                  onClick={() => fillDemo(c.email, c.password)}
+                  aria-label={`Use demo credentials for ${c.email}`}
+                >
                   use
                 </button>
               </div>

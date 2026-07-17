@@ -81,6 +81,26 @@ function buildSeries(
   return points
 }
 
+/** Scale a daily count series so its integer values sum EXACTLY to `total`,
+ *  keeping the shape (weekday dips, warm-up ramp). Makes the "Activity" chart
+ *  reconcile with the headline totals instead of summing ~59% higher. (C-32)
+ *  Only for count metrics — never rates (openRate). */
+function scaleSeries(points: SeriesPoint[], total: number): SeriesPoint[] {
+  const sum = points.reduce((a, p) => a + p.value, 0)
+  if (sum === 0) return points
+  const factor = total / sum
+  const scaled = points.map((p) => ({ ...p, value: Math.max(0, Math.round(p.value * factor)) }))
+  // Absorb rounding drift into the latest non-negative point.
+  let drift = total - scaled.reduce((a, p) => a + p.value, 0)
+  for (let i = scaled.length - 1; i >= 0 && drift !== 0; i--) {
+    if (scaled[i].value + drift >= 0) {
+      scaled[i] = { ...scaled[i], value: scaled[i].value + drift }
+      drift = 0
+    }
+  }
+  return scaled
+}
+
 /* ── Users (the "paper guest list" — see mockAuth for credentials) ─────────── */
 
 export const users: UserAccount[] = [
@@ -359,7 +379,7 @@ export const snapshots: MetricsSnapshot[] = [
       replyRatePct: 9.8,
       totalReplies: 61,
     },
-    replies: { interested: 34, notNow: 21, notInterested: 68 },
+    replies: { interested: 163, notNow: 99, notInterested: 321 },
     qualification: {
       leadsSourced: 4200,
       verifiedContacts: 3560,
@@ -388,7 +408,7 @@ export const snapshots: MetricsSnapshot[] = [
       activeInboxes: 8,
       activeDomains: 2,
     },
-    replies: { interested: 3, notNow: 4, notInterested: 9 },
+    replies: { interested: 4, notNow: 5, notInterested: 11 },
     qualification: {
       leadsSourced: 900,
       verifiedContacts: 610,
@@ -431,19 +451,20 @@ export const snapshots: MetricsSnapshot[] = [
 /* ── Time series (~90 days) ────────────────────────────────────────────────── */
 
 export const series: MetricSeries[] = [
-  // Q3 US — email + linkedin
-  { metric: 'emailsSent', campaignId: 'cmp-q3-us', points: buildSeries(101, 60, 520) },
-  { metric: 'replies', campaignId: 'cmp-q3-us', points: buildSeries(102, 2, 24) },
+  // Q3 US — email + linkedin. Count series scaled to the snapshot totals so the
+  // chart reconciles with the headline numbers (C-32); openRate is a rate → raw.
+  { metric: 'emailsSent', campaignId: 'cmp-q3-us', points: scaleSeries(buildSeries(101, 60, 520), 12430) },
+  { metric: 'replies', campaignId: 'cmp-q3-us', points: scaleSeries(buildSeries(102, 2, 24), 522) },
   { metric: 'openRate', campaignId: 'cmp-q3-us', points: buildSeries(103, 44, 60) },
-  { metric: 'connectionsSent', campaignId: 'cmp-q3-us', points: buildSeries(104, 10, 60, 90, { warmupDays: 60 }) },
-  { metric: 'linkedinReplies', campaignId: 'cmp-q3-us', points: buildSeries(105, 0, 6, 90, { warmupDays: 60 }) },
+  { metric: 'connectionsSent', campaignId: 'cmp-q3-us', points: scaleSeries(buildSeries(104, 10, 60, 90, { warmupDays: 60 }), 800) },
+  { metric: 'linkedinReplies', campaignId: 'cmp-q3-us', points: scaleSeries(buildSeries(105, 0, 6, 90, { warmupDays: 60 }), 61) },
   // EMEA — email only (warming ⇒ low volume, big warm-up)
-  { metric: 'emailsSent', campaignId: 'cmp-emea', points: buildSeries(201, 4, 60, 90, { warmupDays: 70 }) },
-  { metric: 'replies', campaignId: 'cmp-emea', points: buildSeries(202, 0, 3, 90, { warmupDays: 70 }) },
+  { metric: 'emailsSent', campaignId: 'cmp-emea', points: scaleSeries(buildSeries(201, 4, 60, 90, { warmupDays: 70 }), 640) },
+  { metric: 'replies', campaignId: 'cmp-emea', points: scaleSeries(buildSeries(202, 0, 3, 90, { warmupDays: 70 }), 20) },
   { metric: 'openRate', campaignId: 'cmp-emea', points: buildSeries(203, 40, 54, 90, { warmupDays: 70 }) },
   // ABM — linkedin only
-  { metric: 'connectionsSent', campaignId: 'cmp-abm', points: buildSeries(301, 8, 40) },
-  { metric: 'linkedinReplies', campaignId: 'cmp-abm', points: buildSeries(302, 0, 7) },
+  { metric: 'connectionsSent', campaignId: 'cmp-abm', points: scaleSeries(buildSeries(301, 8, 40), 1180) },
+  { metric: 'linkedinReplies', campaignId: 'cmp-abm', points: scaleSeries(buildSeries(302, 0, 7), 68) },
 ]
 
 /* ── Replies inbox (~25) ───────────────────────────────────────────────────── */
@@ -481,7 +502,7 @@ export const replies: LeadReply[] = [
 /* ── Report snapshots ──────────────────────────────────────────────────────── */
 
 export const reports: ReportSummary[] = [
-  { id: 'rep-q3-jun', campaignId: 'cmp-q3-us', period: 'June 2026', periodStart: '2026-06-01', periodEnd: '2026-06-30', meetingsBooked: 9, totalReplies: 402, pipelineValueUsd: 64000, format: 'pdf' },
+  { id: 'rep-q3-jun', campaignId: 'cmp-q3-us', period: 'June 2026', periodStart: '2026-06-01', periodEnd: '2026-06-30', meetingsBooked: 9, totalReplies: 463, pipelineValueUsd: 64000, format: 'pdf' },
   { id: 'rep-q3-may', campaignId: 'cmp-q3-us', period: 'May 2026', periodStart: '2026-05-01', periodEnd: '2026-05-31', meetingsBooked: 3, totalReplies: 118, pipelineValueUsd: 22000, format: 'pdf' },
   { id: 'rep-abm-jun', campaignId: 'cmp-abm', period: 'June 2026', periodStart: '2026-06-01', periodEnd: '2026-06-30', meetingsBooked: 7, totalReplies: 61, pipelineValueUsd: 112000, format: 'pdf' },
   { id: 'rep-abm-w26', campaignId: 'cmp-abm', period: 'Week of Jun 23', periodStart: '2026-06-23', periodEnd: '2026-06-29', meetingsBooked: 2, totalReplies: 18, pipelineValueUsd: 40000, format: 'csv' },

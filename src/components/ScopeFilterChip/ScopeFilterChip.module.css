@@ -1,0 +1,48 @@
+.wrap {
+  display: flex;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  padding: var(--dp-space-50) var(--dp-space-150);
+  border: var(--dp-sem-stroke-border) solid var(--dp-color-border-control);
+  border-radius: var(--dp-sem-radius-chip);
+  background: var(--dp-color-surface-container-low);
+  color: var(--dp-color-on-surface);
+  font-size: var(--dp-font-size-62);
+}
+
+.eyebrow {
+  color: var(--dp-color-on-surface-variant);
+  font-size: var(--dp-font-size-37);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--dp-color-on-surface-variant);
+  cursor: pointer;
+  font-size: var(--dp-font-size-50);
+  line-height: 1;
+}
+
+.clear:hover {
+  background: color-mix(in srgb, var(--dp-color-on-surface) 8%, transparent);
+  color: var(--dp-color-on-surface);
+}
+
+.clear:focus-visible {
+  outline: var(--dp-sem-stroke-focus) solid var(--dp-color-primary);
+  outline-offset: var(--dp-focus-offset);
+}

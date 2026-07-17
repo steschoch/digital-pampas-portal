@@ -25,7 +25,7 @@ export function LatestReplies({
       <div className={styles.sectionAction}>
         <div className={styles.channelTitle}>{title}</div>
         <Link to={viewAllHref} style={{ color: 'var(--dp-color-primary)', fontSize: '0.875rem' }}>
-          View all →
+          View recent
         </Link>
       </div>
 

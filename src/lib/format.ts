@@ -1,8 +1,9 @@
 /** Formatting helpers — display only, no business logic. */
 
-/** 12430 → "12.4k", 1180 → "1,180", 8 → "8". */
+/** 12430 → "12.4k", 1180 → "1,180", 8 → "8". Compact only kicks in at 10k so
+ *  four-digit counts stay exact and legible (C-36). */
 export function formatCompact(n: number): string {
-  if (Math.abs(n) >= 1000) {
+  if (Math.abs(n) >= 10000) {
     return new Intl.NumberFormat('en-US', {
       notation: 'compact',
       maximumFractionDigits: 1,
@@ -26,18 +27,27 @@ export function formatPct(n: number): string {
   return `${n % 1 === 0 ? n : n.toFixed(1)}%`
 }
 
+/** Date-only strings ("2026-06-01") are parsed as UTC midnight; render them in
+ *  UTC too so they don't shift a day west of UTC (the "June" → "May 31" bug).
+ *  Full timestamps keep local rendering. (C-09) */
+const isDateOnly = (iso: string) => /^\d{4}-\d{2}-\d{2}$/.test(iso)
+
 /** ISO → "Jun 24". */
 export function formatShortDate(iso: string): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' }
+  if (isDateOnly(iso)) opts.timeZone = 'UTC'
+  return d.toLocaleDateString('en-US', opts)
 }
 
 /** ISO → "Jun 24, 2026". */
 export function formatLongDate(iso: string): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
+  if (isDateOnly(iso)) opts.timeZone = 'UTC'
+  return d.toLocaleDateString('en-US', opts)
 }
 
 /**

@@ -20,3 +20,12 @@
   font-size: var(--dp-font-size-100, 1rem);
   color: var(--dp-color-on-surface);
 }
+
+/* "Demo dataset" badge sits beside Last sync, keeping the data honest. */
+.syncAside {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dp-space-100);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

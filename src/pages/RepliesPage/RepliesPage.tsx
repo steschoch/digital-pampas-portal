@@ -3,6 +3,7 @@ import { useAsync } from '../../lib/data/useAsync'
 import { useScope } from '../../lib/useScope'
 import { PageHeader } from '@steschoch/digital-pampas-ds'
 import { RepliesTable } from '../../components/metrics/RepliesTable'
+import { ScopeFilterChip } from '../../components/ScopeFilterChip/ScopeFilterChip'
 import layout from '../../styles/layout.module.css'
 
 export function RepliesPage() {
@@ -13,14 +14,17 @@ export function RepliesPage() {
   const { data: replies, loading } = useAsync(() => source.getReplies(campaignIds), [key])
 
   const scopeLabel = isAll ? 'All campaigns' : selectedCampaign?.name ?? '—'
+  const count = replies?.length ?? 0
+  const recentNote = count > 0 ? ` · showing the ${count} most recent` : ''
 
   return (
     <div className={layout.stack}>
       <PageHeader
         eyebrow="Inbox"
         title="Replies"
-        subtitle={`${client?.name ?? '—'} · ${scopeLabel}`}
+        subtitle={`${client?.name ?? '—'} · ${scopeLabel}${recentNote}`}
       />
+      <ScopeFilterChip />
       <RepliesTable replies={replies ?? []} loading={loading} />
     </div>
   )

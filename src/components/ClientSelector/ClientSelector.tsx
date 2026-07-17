@@ -27,6 +27,7 @@ export function ClientSelector() {
       value={clientId}
       onChange={setClient}
       size="sm"
+      label="Client"
       aria-label="Select client"
     />
   )

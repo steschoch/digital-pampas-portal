@@ -31,6 +31,13 @@ a {
   text-decoration: none;
 }
 
+/* Keyboard focus ring for plain portal links (DS components ship their own). (C-43) */
+a:focus-visible {
+  outline: var(--dp-sem-stroke-focus, 2px) solid var(--dp-color-primary);
+  outline-offset: var(--dp-focus-offset, 2px);
+  border-radius: var(--dp-sem-radius-chip, 4px);
+}
+
 /* Respect reduced motion globally (DS covers its own; this covers portal CSS). */
 @media (prefers-reduced-motion: reduce) {
   *,

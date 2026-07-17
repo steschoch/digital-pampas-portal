@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Badge, Button, EmptyState, Icon, Skeleton, Timeline, type LineSeries } from '@steschoch/digital-pampas-ds'
 import { useDataSource } from '../../lib/data/PortalDataContext'
@@ -31,6 +32,11 @@ export function CampaignDetailView({ id }: { id: string }) {
   const emailReplies = useMergedSeries([id], 'replies')
   const connections = useMergedSeries([id], 'connectionsSent')
   const liReplies = useMergedSeries([id], 'linkedinReplies')
+
+  // Refine the document title with the campaign name once loaded (C-25).
+  useEffect(() => {
+    if (campaign?.name) document.title = `${campaign.name} — Digital Pampas`
+  }, [campaign?.name])
 
   const backToAll = () => {
     setCampaign(ALL_CAMPAIGNS)
@@ -79,9 +85,6 @@ export function CampaignDetailView({ id }: { id: string }) {
     ? emailsSent.loading || emailReplies.loading
     : connections.loading || liReplies.loading
 
-  const kpiReplies = hasEmail ? emailReplies.data ?? [] : liReplies.data ?? []
-  const kpiVolume = hasEmail ? emailsSent.data ?? [] : connections.data ?? []
-
   return (
     <div className={layout.stack}>
       <PageHeader
@@ -96,7 +99,14 @@ export function CampaignDetailView({ id }: { id: string }) {
             <Badge variant={meta.badge}>{meta.label}</Badge>
           </span>
         }
-        aside={snapshot ? <LastSync label={formatRelative(snapshot.capturedAt)} /> : undefined}
+        aside={
+          snapshot ? (
+            <span className={styles.syncAside}>
+              <Badge variant="neutral">Demo dataset</Badge>
+              <LastSync label={formatRelative(snapshot.capturedAt)} />
+            </span>
+          ) : undefined
+        }
       />
 
       <section>
@@ -108,8 +118,6 @@ export function CampaignDetailView({ id }: { id: string }) {
         <h2 className={layout.sectionTitle}>Results</h2>
         <KpiRow
           snapshot={snapshot}
-          repliesSeries={kpiReplies}
-          volumeSeries={kpiVolume}
           loading={snapLoading}
         />
       </section>

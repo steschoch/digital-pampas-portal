@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Sidebar, TopBar, ThemeToggle, Icon, Logo, type SidebarItem } from '@steschoch/digital-pampas-ds'
 import { useTheme } from '../../lib/theme/ThemeContext'
 import { useResponsive } from '../../lib/useMediaQuery'
+import { useScope } from '../../lib/useScope'
 import { routerLink } from '../RouterLink'
 import { ClientSelector } from '../ClientSelector/ClientSelector'
 import { CampaignSelector } from '../CampaignSelector/CampaignSelector'
@@ -35,12 +36,35 @@ export function AppShell() {
   const location = useLocation()
   const { scheme, toggle } = useTheme()
   const { isTablet, isMobile } = useResponsive()
+  const { client, isAll, selectedCampaign } = useScope()
   const [drawerOpen, setDrawerOpen] = useState(false)
+
+  // Mirror the active scope for screen readers when client/campaign changes (C-26).
+  const scopeAnnounce = `${client?.name ?? '—'}, ${isAll ? 'all campaigns' : selectedCampaign?.name ?? '—'}`
 
   // Close the mobile drawer whenever navigation happens.
   useEffect(() => {
     setDrawerOpen(false)
   }, [location.pathname])
+
+  // Per-route document title, scoped to the client (C-25). The campaign detail
+  // view refines this further with the campaign name once it loads.
+  useEffect(() => {
+    const p = location.pathname
+    const section = p === '/'
+      ? 'Overview'
+      : p.startsWith('/campaigns/')
+        ? 'Campaign'
+        : p.startsWith('/campaigns')
+          ? 'Campaigns'
+          : p.startsWith('/replies')
+            ? 'Replies'
+            : p.startsWith('/reports')
+              ? 'Reports'
+              : 'Portal'
+    const scope = client?.name ? ` · ${client.name}` : ''
+    document.title = `${section}${scope} — Digital Pampas`
+  }, [location.pathname, client?.name])
 
   const collapsed = isTablet
 
@@ -51,6 +75,13 @@ export function AppShell() {
     active: isActive(location.pathname, n.href),
     icon: <Icon name={n.icon as never} size="sm" />,
   }))
+
+  const selectors = (
+    <>
+      <ClientSelector />
+      <CampaignSelector />
+    </>
+  )
 
   const logo = (
     <Link to="/" className={styles.logoLink} aria-label="Digital Pampas — Overview">
@@ -86,12 +117,7 @@ export function AppShell() {
       <div className={styles.main}>
         <TopBar
           onMenuClick={isMobile ? () => setDrawerOpen(true) : undefined}
-          leading={
-            <>
-              <ClientSelector />
-              <CampaignSelector />
-            </>
-          }
+          leading={isMobile ? undefined : selectors}
           trailing={
             <>
               <ThemeToggle scheme={scheme} onToggle={toggle} />
@@ -99,6 +125,12 @@ export function AppShell() {
             </>
           }
         />
+        {/* ≤640px: selectors get their own row so they never overflow the bar (C-04b). */}
+        {isMobile && <div className={styles.selectorBar}>{selectors}</div>}
+        {/* Announce scope changes to assistive tech (C-26). */}
+        <div className={styles.srLive} aria-live="polite" aria-atomic="true">
+          {scopeAnnounce}
+        </div>
         <main className={styles.content}>
           <Outlet />
         </main>

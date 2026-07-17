@@ -41,10 +41,15 @@ export function RepliesTable({ replies, loading }: { replies: LeadReply[]; loadi
     {
       key: 'channel',
       header: 'Channel',
-      align: 'center',
       render: (row) => {
         const r = row as unknown as LeadReply
-        return <ChannelIcon channel={r.channel} size="sm" px={16} />
+        const label = r.channel === 'email' ? 'Email' : 'LinkedIn'
+        return (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--dp-space-75)' }}>
+            <ChannelIcon channel={r.channel} size="sm" px={16} />
+            {label}
+          </span>
+        )
       },
     },
     {

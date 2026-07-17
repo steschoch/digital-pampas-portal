@@ -1,25 +1,24 @@
-import { StatCard, Sparkline } from '@steschoch/digital-pampas-ds'
-import type { MetricsSnapshot, SeriesPoint } from '../../data/types'
+import { StatCard } from '@steschoch/digital-pampas-ds'
+import type { MetricsSnapshot } from '../../data/types'
 import { formatCompact, formatCurrencyCompact } from '../../lib/format'
-import { trendFromSeries } from './kpi'
 import layout from '../../styles/layout.module.css'
 
 interface KpiRowProps {
   snapshot: MetricsSnapshot | undefined
-  /** Trend source for outcome/reply momentum. */
-  repliesSeries: SeriesPoint[]
-  /** Trend source for volume/pipeline momentum. */
-  volumeSeries: SeriesPoint[]
   loading?: boolean
 }
 
 /**
  * KpiRow — the four business-result KPIs (architecture §5.3): result metrics
- * before operational ones. Each card shows value, delta and a trend sparkline.
+ * before operational ones.
+ *
+ * NOTE (C-03): deltas + sparklines were removed. They all reused the email-reply
+ * trend, so "Meetings booked ↓4%" etc. were not measuring their own metric — a
+ * false-precision honesty risk in a product that sells "the numbers speak".
+ * TODO: reintroduce a per-metric delta once the backend provides a true time
+ * series per KPI (from the snapshot history), labelled "vs. prior 12 days".
  */
-export function KpiRow({ snapshot, repliesSeries, volumeSeries, loading }: KpiRowProps) {
-  const repliesTrend = trendFromSeries(repliesSeries)
-  const volumeTrend = trendFromSeries(volumeSeries)
+export function KpiRow({ snapshot, loading }: KpiRowProps) {
   const o = snapshot?.outcomes
   const r = snapshot?.replies
 
@@ -28,46 +27,23 @@ export function KpiRow({ snapshot, repliesSeries, volumeSeries, loading }: KpiRo
       <StatCard
         label="Meetings booked"
         value={o ? formatCompact(o.meetingsBooked) : '—'}
-        delta={repliesTrend.delta}
         loading={loading}
-      >
-        {repliesTrend.spark.length > 0 && (
-          <Sparkline points={repliesTrend.spark} colorVar="var(--dp-color-primary)" fill />
-        )}
-      </StatCard>
-
+      />
       <StatCard
         label="Opportunities"
         value={o ? formatCompact(o.opportunities) : '—'}
-        delta={repliesTrend.delta}
         loading={loading}
-      >
-        {repliesTrend.spark.length > 0 && (
-          <Sparkline points={repliesTrend.spark} colorVar="var(--dp-color-phase-violet)" fill />
-        )}
-      </StatCard>
-
+      />
       <StatCard
         label="Pipeline value"
         value={o ? formatCurrencyCompact(o.pipelineValueUsd) : '—'}
-        delta={volumeTrend.delta}
         loading={loading}
-      >
-        {volumeTrend.spark.length > 0 && (
-          <Sparkline points={volumeTrend.spark} colorVar="var(--dp-color-phase-coral)" fill />
-        )}
-      </StatCard>
-
+      />
       <StatCard
         label="Interested replies"
         value={r ? formatCompact(r.interested) : '—'}
-        delta={repliesTrend.delta}
         loading={loading}
-      >
-        {repliesTrend.spark.length > 0 && (
-          <Sparkline points={repliesTrend.spark} colorVar="var(--dp-color-phase-sky)" fill />
-        )}
-      </StatCard>
+      />
     </div>
   )
 }

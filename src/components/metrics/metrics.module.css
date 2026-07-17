@@ -52,6 +52,11 @@
 .metricValue {
   display: flex;
   align-items: baseline;
+  /* When the value + benchmark badge don't fit the cell, the badge wraps to the
+     next line INSIDE the cell instead of overflowing onto the neighbouring gauge
+     column (the "under 2%" over "Deliverability" bug). (C-06) */
+  flex-wrap: wrap;
+  row-gap: var(--dp-space-25);
   gap: var(--dp-space-75);
   font-family: var(--dp-font-family-heading);
   font-weight: var(--dp-font-weight-semibold);

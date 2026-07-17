@@ -48,9 +48,11 @@ export function EmailChannelCard({
             badge={
               bounceMet ? (
                 <Badge variant="success">
-                  <Icon name="Check" size="xs" /> under 2%
+                  <Icon name="Check" size="xs" /> under 2% target
                 </Badge>
-              ) : undefined
+              ) : (
+                <Badge variant="warning">above 2% target</Badge>
+              )
             }
           />
           {detailed && (
@@ -65,12 +67,14 @@ export function EmailChannelCard({
           <Gauge
             value={email.deliverabilityPct}
             label="Deliverability"
+            format="percent"
             thresholds={{ warn: 90, good: 95 }}
             size={detailed ? 116 : 104}
           />
           <Gauge
             value={email.domainReputation}
             label="Domain reputation"
+            format="ratio100"
             thresholds={{ warn: 70, good: 85 }}
             size={detailed ? 116 : 104}
           />
@@ -98,15 +102,14 @@ export function LinkedInChannelCard({
           <ChannelIcon channel="linkedin" px={18} />
           LinkedIn
         </div>
-        <Badge variant="primary">Active</Badge>
       </div>
 
       <div className={styles.channelBody}>
         <div className={styles.metricList}>
           <Metric label="Invites sent" value={formatCompact(linkedin.connectionsSent)} />
-          <Metric label="Acceptance" value={formatPct(linkedin.acceptanceRatePct)} />
+          <Metric label="Acceptance rate" value={formatPct(linkedin.acceptanceRatePct)} />
           <Metric label="Messages" value={formatCompact(linkedin.messagesSent)} />
-          <Metric label="Reply rate" value={formatPct(linkedin.replyRatePct)} />
+          <Metric label="Reply rate (per message)" value={formatPct(linkedin.replyRatePct)} />
         </div>
 
         {detailed && (

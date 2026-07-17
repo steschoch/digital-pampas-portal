@@ -9,16 +9,17 @@ import {
 
 interface PersistedSelection {
   clientId: string
-  campaignId: string
 }
 
+/** Only the client is persisted — the campaign filter is intentionally session-only
+ *  so a reload never leaves a "phantom" campaign scoping the dashboard. (C-19) */
 function readPersisted(): PersistedSelection | null {
   try {
     const raw = localStorage.getItem(SELECTION_STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as PersistedSelection
-    if (typeof parsed?.clientId === 'string' && typeof parsed?.campaignId === 'string') {
-      return parsed
+    if (typeof parsed?.clientId === 'string') {
+      return { clientId: parsed.clientId }
     }
     return null
   } catch {
@@ -26,18 +27,17 @@ function readPersisted(): PersistedSelection | null {
   }
 }
 
-function persist(sel: PersistedSelection): void {
+function persist(clientId: string): void {
   try {
-    localStorage.setItem(SELECTION_STORAGE_KEY, JSON.stringify(sel))
+    localStorage.setItem(SELECTION_STORAGE_KEY, JSON.stringify({ clientId }))
   } catch {
     /* ignore */
   }
 }
 
 /**
- * SelectionProvider — the global client/campaign context (persisted). Changing
- * either updates every page. Defaults to the user's first client + All campaigns;
- * a persisted selection is restored when still valid for this login.
+ * SelectionProvider — the global client/campaign context. The client is persisted;
+ * the campaign filter is session-only and always starts at All campaigns. (C-19)
  */
 export function SelectionProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth()
@@ -58,25 +58,20 @@ export function SelectionProvider({ children }: { children: ReactNode }) {
         ? persisted.clientId
         : (user.clientIds[0] ?? null)
     setClientId(validClient)
-    setCampaignId(
-      persisted && persisted.clientId === validClient ? persisted.campaignId : ALL_CAMPAIGNS,
-    )
+    // Campaign scope always starts at All on a fresh load (not persisted).
+    setCampaignId(ALL_CAMPAIGNS)
   }, [user])
 
   const setClient = useCallback((next: string) => {
     setClientId(next)
     // Switching client always resets scope to All (campaigns differ per client).
     setCampaignId(ALL_CAMPAIGNS)
-    persist({ clientId: next, campaignId: ALL_CAMPAIGNS })
+    persist(next)
   }, [])
 
-  const setCampaign = useCallback(
-    (next: string) => {
-      setCampaignId(next)
-      if (clientId) persist({ clientId, campaignId: next })
-    },
-    [clientId],
-  )
+  const setCampaign = useCallback((next: string) => {
+    setCampaignId(next)
+  }, [])
 
   const value = useMemo<SelectionContextValue>(
     () => ({ clientId, campaignId, setClient, setCampaign }),
