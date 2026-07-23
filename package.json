@@ -12,7 +12,7 @@
     "preview": "vite preview --port 5174"
   },
   "dependencies": {
-    "@steschoch/digital-pampas-ds": "^1.6.2",
+    "@steschoch/digital-pampas-ds": "^1.7.0",
     "lucide-react": "^1.18.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

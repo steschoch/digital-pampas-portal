@@ -6,10 +6,55 @@
   gap: var(--dp-space-300);
 }
 
+/* ── Vertical rhythm: space is structure ──────────────────────────
+   A single uniform gap makes a page read as a flat list of equals. On a
+   composed page, use .stackGrouped for generous space BETWEEN blocks and
+   .group for tight space INSIDE a block, so related sections bind into
+   one unit (Gestalt proximity). */
+.stackGrouped {
+  gap: var(--dp-space-600);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dp-space-300);
+}
+
+/* ── Container roles ──────────────────────────────────────────────
+   A card groups content; it is not wallpaper. When every block carries the
+   same container, nothing is primary. Roles give weight a meaning:
+     .roleHero  — the single protagonist block of a page
+     (none)     — the standard panel: use the DS Card as-is
+     .roleQuiet — no container: content sits directly on the page surface */
+.roleHero {
+  padding: var(--dp-space-300);
+  border: var(--dp-sem-stroke-border) solid
+    color-mix(in srgb, var(--dp-color-primary) 32%, transparent);
+  border-radius: var(--dp-sem-radius-card);
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--dp-color-primary) 7%, transparent),
+      transparent 65%
+    ),
+    var(--dp-color-surface-container-low);
+}
+
+.roleQuiet {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+/* Section titles recede so the page H1 (48px) leads. Was --dp-font-size-300
+   (32px) with a fallback that read 1.25rem — the fallback revealed the real
+   intent (20px) while the token rendered 60% larger (audit UI-10). Pointing at
+   the token that actually means 20px resolves that mismatch. */
 .sectionTitle {
   font-family: var(--dp-font-family-heading);
   font-weight: var(--dp-font-weight-semibold);
-  font-size: var(--dp-font-size-300, 1.25rem);
+  font-size: var(--dp-font-size-150);
   color: var(--dp-color-on-surface);
   margin: 0 0 var(--dp-space-150);
 }
@@ -28,6 +73,18 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--dp-space-200);
+}
+
+/* Led KPI row: the protagonist metric takes 2 of 5 columns and the three
+   supporting figures take one each, so the whole set still lands on ONE row
+   (4 tiles in a 4-col grid with a 2-col lead would orphan the fourth). Breaking
+   the identical-tiles symmetry is what stops this reading as a stock strip. */
+.kpiGridLed {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.kpiGridLed > :first-child {
+  grid-column: span 2;
 }
 
 /* Two equal columns that stack on narrow screens. */
@@ -70,9 +127,26 @@
   }
 }
 
+@media (max-width: 1200px) {
+  /* Five columns get too tight for the supporting labels before the tablet
+     breakpoint: drop the lead to full width and let the rest share a row. */
+  .kpiGridLed {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kpiGridLed > :first-child {
+    grid-column: span 3;
+  }
+}
+
 @media (max-width: 768px) {
   .kpiGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .kpiGridLed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .kpiGridLed > :first-child {
+    grid-column: span 2;
   }
   .twoCol {
     grid-template-columns: 1fr;

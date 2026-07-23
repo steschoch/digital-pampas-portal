@@ -65,12 +65,28 @@
   margin-top: var(--dp-space-25);
 }
 
-.gauges {
+/* Infrastructure-health column: the signature gauge and the reputation figure
+   read as one cluster, which also balances the card against the metric grid. */
+.healthCol {
   display: flex;
-  gap: var(--dp-space-200);
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  gap: var(--dp-space-150);
+  text-align: center;
+  min-width: 0;
+}
+
+/* The reputation figure SUPPORTS the gauge: it inherits the 32px metric value by
+   default, which both competed with the gauge and spilled the column into the
+   metric grid beside it. Smaller, with the band stacked under it, keeps the
+   cluster as wide as the gauge and no wider. */
+.healthCol .metricValue {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: var(--dp-space-50);
+  font-size: var(--dp-font-size-150);
 }
 
 .repliesList {

@@ -1,3 +1,19 @@
+/* The lede: the page's answer in one plain sentence, above the figures that
+   back it up. Reads before the eye reaches any chart. */
+.lede {
+  margin: 0 0 var(--dp-space-200);
+  font-family: var(--dp-font-family-body);
+  font-size: var(--dp-font-size-112);
+  line-height: 1.5;
+  color: var(--dp-color-on-surface-variant);
+  max-width: 60ch;
+}
+
+.lede strong {
+  font-weight: var(--dp-font-weight-semibold);
+  color: var(--dp-color-on-surface);
+}
+
 .timelineStack {
   display: flex;
   flex-direction: column;

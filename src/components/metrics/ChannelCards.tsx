@@ -16,6 +16,19 @@ function Metric({ label, value, badge }: { label: string; value: string; badge?:
   )
 }
 
+/**
+ * Domain reputation as a number plus a qualitative band. Same information the
+ * second radial gauge carried, at a fraction of the ink — a pair of gauges side
+ * by side is the stock-dashboard tell (audit AS-03), so the radial format is
+ * reserved for ONE signature indicator (deliverability). Bands match the
+ * thresholds the gauge used: good ≥ 85, warn ≥ 70.
+ */
+function reputationBand(value: number): { label: string; variant: 'success' | 'warning' | 'error' } {
+  if (value >= 85) return { label: 'Strong', variant: 'success' }
+  if (value >= 70) return { label: 'Watch', variant: 'warning' }
+  return { label: 'At risk', variant: 'error' }
+}
+
 /** EmailChannelCard — email metrics (SmartLead). Renders only for email campaigns. */
 export function EmailChannelCard({
   email,
@@ -25,6 +38,7 @@ export function EmailChannelCard({
   detailed?: boolean
 }) {
   const bounceMet = email.bounceRatePct < 2
+  const reputation = reputationBand(email.domainReputation)
   return (
     <Card variant="outlined" className={styles.channelCard}>
       <div className={styles.channelHead}>
@@ -63,20 +77,21 @@ export function EmailChannelCard({
           )}
         </div>
 
-        <div className={styles.gauges}>
+        {/* Infrastructure health, grouped: ONE radial (the signature indicator for
+            an outbound engine) plus the reputation it depends on. A second gauge
+            beside the first is the stock-dashboard tell (AS-03). */}
+        <div className={styles.healthCol}>
           <Gauge
             value={email.deliverabilityPct}
             label="Deliverability"
             format="percent"
             thresholds={{ warn: 90, good: 95 }}
-            size={detailed ? 116 : 104}
+            size={detailed ? 132 : 120}
           />
-          <Gauge
-            value={email.domainReputation}
+          <Metric
             label="Domain reputation"
-            format="ratio100"
-            thresholds={{ warn: 70, good: 85 }}
-            size={detailed ? 116 : 104}
+            value={`${Math.round(email.domainReputation)}/100`}
+            badge={<Badge variant={reputation.variant}>{reputation.label}</Badge>}
           />
         </div>
       </div>

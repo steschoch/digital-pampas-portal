@@ -5,7 +5,7 @@ import { useAsync } from '../../lib/data/useAsync'
 import { useScope } from '../../lib/useScope'
 import { useResponsive } from '../../lib/useMediaQuery'
 import { useMergedSeries } from '../../lib/useSeries'
-import { formatRelative } from '../../lib/format'
+import { formatCompact, formatCurrencyCompact, formatRelative } from '../../lib/format'
 import { PageHeader, LastSync } from '@steschoch/digital-pampas-ds'
 import { KpiRow } from '../../components/metrics/KpiRow'
 import { ActivityChart } from '../../components/metrics/ActivityChart'
@@ -71,24 +71,42 @@ export function OverviewPage() {
 
   const scopeLabel = isAll ? 'All campaigns' : selectedCampaign?.name ?? '—'
   const syncLabel = snapshot ? formatRelative(snapshot.capturedAt) : '—'
+  // Cumulative campaign figures — OutcomeMetrics carries no period, so the lede
+  // says "to date" rather than claiming a window the data doesn't support.
+  const outcomes = snapshot?.outcomes
 
   return (
-    <div className={layout.stack}>
-      <PageHeader
-        eyebrow="Dashboard"
-        title="Overview"
-        subtitle={`${client?.name ?? '—'} · ${scopeLabel}`}
-        aside={
-          <span className={styles.syncAside}>
-            <Badge variant="neutral">Demo dataset</Badge>
-            <LastSync label={syncLabel} />
-          </span>
-        }
-      />
+    <div className={`${layout.stack} ${layout.stackGrouped}`}>
+      <div className={layout.group}>
+        <PageHeader
+          eyebrow="Dashboard"
+          title="Overview"
+          subtitle={`${client?.name ?? '—'} · ${scopeLabel}`}
+          aside={
+            <span className={styles.syncAside}>
+              <Badge variant="neutral">Demo dataset</Badge>
+              <LastSync label={syncLabel} />
+            </span>
+          }
+        />
 
-      <ScopeFilterChip />
+        <ScopeFilterChip />
+      </div>
 
-      {/* Campaign status — the answer to "what phase are we in?" comes first. */}
+      {/* The answer, before anything operational. No section title on purpose:
+          this block IS the page's opening statement, and one figure leads. */}
+      <section className={layout.roleHero}>
+        {outcomes && (
+          <p className={styles.lede}>
+            <strong>{formatCompact(outcomes.meetingsBooked)} meetings booked</strong> and{' '}
+            <strong>{formatCurrencyCompact(outcomes.pipelineValueUsd)} in pipeline</strong>
+            {isAll ? ' across all campaigns' : ` on ${selectedCampaign?.name ?? ''}`}, to date.
+          </p>
+        )}
+        <KpiRow snapshot={snapshot} loading={snapLoading} />
+      </section>
+
+      {/* Where the work stands. */}
       <section>
         <h2 className={layout.sectionTitle}>Campaign status</h2>
         {isAll ? (
@@ -107,31 +125,25 @@ export function OverviewPage() {
         ) : null}
       </section>
 
-      {/* Result KPIs before operational metrics. */}
-      <section>
-        <h2 className={layout.sectionTitle}>Results</h2>
-        <KpiRow
-          snapshot={snapshot}
-          loading={snapLoading}
-        />
-      </section>
-
-      {/* Activity + reply breakdown. */}
-      <section className={layout.chartSplit}>
-        <ActivityChart series={activitySeries} loading={activityLoading} />
-        <ReplyDonut replies={snapshot?.replies} loading={snapLoading} />
-      </section>
-
-      {/* Conditional channel blocks — only channels the scope actually runs. */}
-      {(hasEmail || hasLinkedIn) && (
-        <section>
-          <h2 className={layout.sectionTitle}>Channels</h2>
-          <div className={layout.channelGrid}>
-            {hasEmail && snapshot?.email && <EmailChannelCard email={snapshot.email} />}
-            {hasLinkedIn && snapshot?.linkedin && <LinkedInChannelCard linkedin={snapshot.linkedin} />}
-          </div>
+      {/* Performance — activity, reply mix and channels bind into one block, so
+          the page reads as a few groups instead of a list of equal sections. */}
+      <div className={layout.group}>
+        <section className={layout.chartSplit}>
+          <ActivityChart series={activitySeries} loading={activityLoading} />
+          <ReplyDonut replies={snapshot?.replies} loading={snapLoading} />
         </section>
-      )}
+
+        {/* Conditional channel blocks — only channels the scope actually runs. */}
+        {(hasEmail || hasLinkedIn) && (
+          <section>
+            <h2 className={layout.sectionTitle}>Channels</h2>
+            <div className={layout.channelGrid}>
+              {hasEmail && snapshot?.email && <EmailChannelCard email={snapshot.email} />}
+              {hasLinkedIn && snapshot?.linkedin && <LinkedInChannelCard linkedin={snapshot.linkedin} />}
+            </div>
+          </section>
+        )}
+      </div>
 
       {/* Latest interested replies. */}
       <section>

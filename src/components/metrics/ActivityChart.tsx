@@ -24,11 +24,17 @@ export function ActivityChart({ series, loading, title = 'Activity & replies (30
       emptyTitle="No activity yet"
       emptyDescription="Sending activity will show up here once the campaign starts."
     >
+      {/* Authored, not stock (audit AS-08): the primary series gets an area so it
+          reads as volume, the reference lines drop to three, and the per-day dots
+          come off — at 30 daily points they only added serration. */}
       <LineChart
         series={series30}
         height={260}
         yFormat={(v) => formatCompact(v)}
         showGrid
+        gridLines={3}
+        showDots={false}
+        area
         ariaLabel={title}
       />
     </ChartPanel>

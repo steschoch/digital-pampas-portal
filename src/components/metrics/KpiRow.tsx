@@ -23,10 +23,11 @@ export function KpiRow({ snapshot, loading }: KpiRowProps) {
   const r = snapshot?.replies
 
   return (
-    <div className={layout.kpiGrid}>
+    <div className={`${layout.kpiGrid} ${layout.kpiGridLed}`}>
       <StatCard
         label="Meetings booked"
         value={o ? formatCompact(o.meetingsBooked) : '—'}
+        emphasis="hero"
         loading={loading}
       />
       <StatCard
