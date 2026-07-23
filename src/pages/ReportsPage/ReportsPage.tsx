@@ -111,14 +111,26 @@ export function ReportsPage() {
         aside={<Badge variant="neutral">Export is a demo</Badge>}
       />
       <ScopeFilterChip />
-      <DataTable
-        columns={columns}
-        rows={(reports ?? []) as unknown as DataRow[]}
-        sortable
-        loading={loading}
-        emptyTitle="No reports yet"
-        emptyDescription="Monthly and weekly report snapshots will appear here as the campaign runs."
-      />
+      {/* A short table across the full canvas reads as unfinished (audit AS-05).
+          Giving it a reading measure and a context column composes the space. */}
+      <div className={layout.tableSplit}>
+        <DataTable
+          columns={columns}
+          rows={(reports ?? []) as unknown as DataRow[]}
+          sortable
+          loading={loading}
+          emptyTitle="No reports yet"
+          emptyDescription="Snapshots are cut weekly and monthly. The first one lands here as the campaign runs."
+        />
+        <aside className={layout.contextPanel}>
+          <h2 className={layout.contextTitle}>How snapshots work</h2>
+          <p className={layout.contextBody}>
+            Each row is a point in time, not a live number. A report keeps saying what it
+            said on the day it was cut, so you can compare periods without the past moving
+            under you.
+          </p>
+        </aside>
+      </div>
     </div>
   )
 }

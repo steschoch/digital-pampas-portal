@@ -123,7 +123,7 @@ export function RepliesTable({ replies, loading }: { replies: LeadReply[]; loadi
           sortable
           loading={loading}
           emptyTitle="No replies yet"
-          emptyDescription="No replies match this filter. When the campaign is in warm-up, replies take a little time to arrive."
+          emptyDescription="Nothing matches this filter. During warm-up, replies take time to arrive."
         />
       </div>
     </div>

@@ -41,7 +41,7 @@ export function LatestReplies({
         <EmptyState
           icon={<Icon name="Inbox" size="lg" />}
           title="No replies yet"
-          description="Interested replies will show up here as the campaign gets responses."
+          description="Still warming up. Interested replies surface here first."
         />
       ) : (
         <div className={styles.repliesList}>

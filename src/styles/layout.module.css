@@ -108,11 +108,57 @@
   gap: var(--dp-space-300);
 }
 
-/* Card grid for campaigns. */
+/* Card grid for campaigns. auto-FIT, not auto-fill: auto-fill keeps the empty
+   tracks it created, which is what left a third of the Campaigns canvas blank
+   with two campaigns (audit AS-05). auto-fit collapses them so the cards own
+   the row, and the max-width stops them stretching on very wide screens. */
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: var(--dp-space-250);
+  max-width: 1100px;
+}
+
+/* Table (reading measure) plus a context column, so a short table reads as
+   composed rather than as content floating in an empty canvas. */
+.tableSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: var(--dp-space-400);
+  align-items: start;
+}
+
+/* Quiet supporting panel: explains the thing beside it without competing. */
+.contextPanel {
+  padding: var(--dp-space-250);
+  border-left: var(--dp-sem-stroke-border) solid var(--dp-color-outline-variant);
+}
+
+.contextTitle {
+  margin: 0 0 var(--dp-space-100);
+  font-family: var(--dp-font-family-code);
+  font-size: var(--dp-font-size-50);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dp-color-on-surface-variant);
+}
+
+.contextBody {
+  margin: 0;
+  font-family: var(--dp-font-family-body);
+  font-size: var(--dp-font-size-62);
+  line-height: 1.6;
+  color: var(--dp-color-on-surface-variant);
+}
+
+@media (max-width: 1024px) {
+  .tableSplit {
+    grid-template-columns: 1fr;
+  }
+  .contextPanel {
+    border-left: none;
+    padding-inline: 0;
+  }
 }
 
 .metricRow {

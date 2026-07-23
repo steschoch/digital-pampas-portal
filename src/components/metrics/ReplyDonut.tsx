@@ -29,7 +29,7 @@ export function ReplyDonut({
       loading={loading}
       empty={!loading && total === 0}
       emptyTitle="No replies yet"
-      emptyDescription="Categorized replies will appear here once the campaign gets responses."
+      emptyDescription="Nothing to sort yet. Replies get categorized here as they land."
     >
       <DonutChart
         segments={segments}

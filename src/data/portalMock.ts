@@ -144,7 +144,7 @@ export const campaigns: Campaign[] = [
   {
     id: 'cmp-q3-us',
     clientId: 'client-acme',
-    name: 'Q3 Outbound — US Market',
+    name: 'Q3 Outbound / US Market',
     state: 'live',
     channels: ['email', 'linkedin'],
     startedAt: '2026-05-12',
@@ -233,7 +233,7 @@ export const campaigns: Campaign[] = [
   {
     id: 'cmp-emea',
     clientId: 'client-acme',
-    name: 'EMEA Expansion — Email',
+    name: 'EMEA Expansion / Email',
     state: 'warming',
     channels: ['email'],
     startedAt: '2026-06-09',
@@ -291,7 +291,7 @@ export const campaigns: Campaign[] = [
   {
     id: 'cmp-abm',
     clientId: 'client-northwind',
-    name: 'Enterprise ABM — LinkedIn',
+    name: 'Enterprise ABM / LinkedIn',
     state: 'live',
     channels: ['linkedin'],
     startedAt: '2026-05-20',

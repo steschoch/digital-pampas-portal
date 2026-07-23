@@ -27,7 +27,7 @@ export function CampaignsPage() {
         <EmptyState
           icon={<Icon name="Megaphone" size="xl" />}
           title="No campaigns yet"
-          description="Campaigns for this client will appear here once they're set up."
+          description="Nothing wired for this client yet. Campaigns appear here once the engine is built."
         />
       ) : (
         <div className={layout.cardGrid}>
