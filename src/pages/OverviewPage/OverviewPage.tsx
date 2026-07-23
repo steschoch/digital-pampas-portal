@@ -98,12 +98,12 @@ export function OverviewPage() {
               .map((c) => (
                 <div key={c.id} className={styles.timelineRow}>
                   <div className={styles.timelineLabel}>{c.name}</div>
-                  <Timeline phases={c.phases} orientation={timelineOrientation} density="compact" />
+                  <Timeline phases={c.phases} orientation={timelineOrientation} density="compact" animate />
                 </div>
               ))}
           </div>
         ) : selectedCampaign ? (
-          <Timeline phases={selectedCampaign.phases} orientation={timelineOrientation} density="compact" />
+          <Timeline phases={selectedCampaign.phases} orientation={timelineOrientation} density="compact" animate />
         ) : null}
       </section>
 
